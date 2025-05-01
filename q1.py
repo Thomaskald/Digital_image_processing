@@ -1,44 +1,47 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from skimage import io
 from sklearn.cluster import KMeans
-from skimage.util import img_as_float
-from skimage.metrics import mean_squared_error
+from PIL import Image
+from sklearn.metrics import mean_squared_error
 
-# Διαβάζουμε την εικόνα
-image = img_as_float(io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/flowers.jpg'))
-h, w, c = image.shape
-pixels = image.reshape(-1, 3)
-
-# Ο αριθμός των χρωμάτων (clusters) που θα δοκιμάσουμε
-n_colors_list = [5, 20, 200, 1000]
-
-# Ορίζουμε plot για εμφάνιση αποτελεσμάτων
-plt.figure(figsize=(15, 10))
-plt.subplot(1, len(n_colors_list)+1, 1)
-plt.imshow(image)
-plt.title("Αρχική")
-plt.axis('off')
-
-# Κβάντιση για κάθε επίπεδο
-for i, n_colors in enumerate(n_colors_list, start=2):
-    print(f"-> Επεξεργασία για {n_colors} χρώματα...")
-
-    # Εκπαίδευση KMeans
+def quantize_image_kmeans(img_np, n_colors):
+    pixels = img_np.reshape(-1, 3)
     kmeans = KMeans(n_clusters=n_colors, random_state=42, n_init='auto')
     kmeans.fit(pixels)
-    new_colors = kmeans.cluster_centers_[kmeans.predict(pixels)]
-    quantized_image = new_colors.reshape(h, w, 3)
+    labels = kmeans.predict(pixels)
+    new_colors = kmeans.cluster_centers_.astype('uint8')
+    quantized_pixels = new_colors[labels]
+    return quantized_pixels.reshape(img_np.shape)
 
-    # Υπολογισμός MSE
-    mse = mean_squared_error(image, quantized_image)
-    print(f"MSE για {n_colors} χρώματα: {mse:.6f}")
+def compute_mse(original, quantized):
+    return mean_squared_error(original.reshape(-1, 3), quantized.reshape(-1, 3))
 
-    # Εμφάνιση εικόνας
-    plt.subplot(1, len(n_colors_list)+1, i)
-    plt.imshow(quantized_image)
-    plt.title(f"{n_colors} χρώματα\nMSE={mse:.5f}")
-    plt.axis('off')
+# Φόρτωση εικόνας
+image_path = "/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/flowers.jpg"
+original_img = Image.open(image_path).convert('RGB')
+original_np = np.array(original_img)
 
-plt.tight_layout()
+# Επίπεδα κβάντισης
+levels = [5, 20, 100, 1000]
+
+# Εμφάνιση αρχικής εικόνας
+plt.figure(figsize=(5, 5))
+plt.imshow(original_np)
+plt.title("Αρχική Εικόνα")
+plt.axis('off')
 plt.show()
+
+# Επεξεργασία κάθε επιπέδου κβάντισης
+for k in levels:
+    quantized = quantize_image_kmeans(original_np, k)
+    mse = compute_mse(original_np, quantized)
+
+    # Εμφάνιση κάθε κβαντισμένης εικόνας αμέσως
+    plt.figure(figsize=(5, 5))
+    plt.imshow(quantized)
+    plt.title(f"{k} χρώματα\nMSE = {mse:.2f}")
+    plt.axis('off')
+    plt.show()
+
+    # Εκτύπωση στην κονσόλα
+    print(f"{k} χρώματα: MSE = {mse:.2f}")
