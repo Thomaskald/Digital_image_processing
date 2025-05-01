@@ -4,7 +4,7 @@ import skimage as ski
 from scipy.fft import fft2, ifft2
 
 # Φόρτωμα εικόνας
-img = ski.io.imread("/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/cornfield.jpg")
+img = ski.io.imread("/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/cornfield.jpg", as_gray=True)
 
 # Α: Υπολογισμός μετασχηματισμού Fourier
 fft_img = fft2(img)
