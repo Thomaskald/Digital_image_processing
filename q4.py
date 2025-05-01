@@ -8,7 +8,7 @@ image2 = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-proj
 image3 = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/lenna-n3.jpg', as_gray=True)
 
 #Εικόνα 1
-img1_filtered = filters.gaussian(image1, 3)
+img1_filtered = filters.gaussian(image1, 1.4)
 
 plt.figure(figsize=(10,5))
 plt.subplot(1, 2, 1)
@@ -23,7 +23,7 @@ plt.suptitle("Αρχική και Φιλτραρισμένη - Εικόνα 1 (G
 plt.show()
 
 #Εικόνα 2
-img2_filtered = median(image2, footprint=disk(1))
+img2_filtered = median(image2, footprint=disk(2))
 
 plt.figure(figsize=(10, 5))
 plt.subplot(1, 2, 1)
