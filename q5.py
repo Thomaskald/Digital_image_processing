@@ -1,4 +1,3 @@
-%pip install ultralytics
 from ultralytics import YOLO
 import cv2
 import matplotlib.pyplot as plt
