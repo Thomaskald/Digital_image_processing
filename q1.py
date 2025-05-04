@@ -22,30 +22,26 @@ original_img = Image.open(image_path).convert('RGB')
 original_np = np.array(original_img)
 
 # Επίπεδα κβάντισης
-levels = [5, 20, 100, 200, 500]
-
-# Δημιουργία plot 2x3
-fig, axes = plt.subplots(2, 3, figsize=(15, 10))
-axes = axes.flatten()
+levels = [5, 20, 100, 1000]
 
 # Εμφάνιση αρχικής εικόνας
-axes[0].imshow(original_np)
-axes[0].set_title("Αρχική Εικόνα")
-axes[0].axis('off')
+plt.figure(figsize=(5, 5))
+plt.imshow(original_np)
+plt.title("Αρχική Εικόνα")
+plt.axis('off')
+plt.show()
 
-# Κβάντιση και εμφάνιση κάθε εικόνας
-for idx, k in enumerate(levels, start=1):
+# Επεξεργασία κάθε επιπέδου κβάντισης
+for k in levels:
     quantized = quantize_image_kmeans(original_np, k)
     mse = compute_mse(original_np, quantized)
 
-    axes[idx].imshow(quantized)
-    axes[idx].set_title(f"{k} χρώματα\nMSE = {mse:.2f}")
-    axes[idx].axis('off')
+    # Εμφάνιση κάθε κβαντισμένης εικόνας αμέσως
+    plt.figure(figsize=(5, 5))
+    plt.imshow(quantized)
+    plt.title(f"{k} χρώματα\nMSE = {mse:.2f}")
+    plt.axis('off')
+    plt.show()
 
-# Αν περισσεύει κενό subplot, απενεργοποίησέ το
-if len(levels) < len(axes) - 1:
-    for i in range(len(levels)+1, len(axes)):
-        axes[i].axis('off')
-
-plt.tight_layout()
-plt.show()
+    # Εκτύπωση στην κονσόλα
+    print(f"{k} χρώματα: MSE = {mse:.2f}")
