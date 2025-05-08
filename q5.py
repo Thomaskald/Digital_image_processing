@@ -2,7 +2,6 @@ from ultralytics import YOLO
 import cv2
 import matplotlib.pyplot as plt
 
-# Φόρτωση προεκπαιδευμένου μοντέλου YOLOv8 (nano)
 model = YOLO('yolov8n.pt')
 
 # Φόρτωση εικόνας
@@ -28,10 +27,6 @@ for result in results:
 
             # Σχεδίαση bounding box
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-            # Προσθήκη αριθμού αυτοκινήτου
-            cv2.putText(frame, f'car #{car_count}', (x1, y1 - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
 # Εμφάνιση αποτελέσματος
 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
