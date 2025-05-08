@@ -42,6 +42,3 @@ for k in levels:
     plt.title(f"{k} χρώματα\nMSE = {mse:.2f}")
     plt.axis('off')
     plt.show()
-
-    # Εκτύπωση στην κονσόλα
-    print(f"{k} χρώματα: MSE = {mse:.2f}")
