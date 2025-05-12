@@ -45,7 +45,7 @@ plt.title("Νέο Φάσμα Πλάτους")
 
 plt.subplot(1, 2, 2)
 plt.imshow(np.angle(modified_fft), cmap='gray')
-plt.title("Αντεστραμμένο Φάσμα Φάσης")
+plt.title("Νέο Φάσμα Φάσης")
 
 plt.tight_layout()
 plt.show()
@@ -58,6 +58,6 @@ reconstructed_real = np.real(reconstructed)
 # Προβολή τελικής εικόνας
 plt.figure(figsize=(6, 6))
 plt.imshow(reconstructed_real, cmap='gray')
-plt.title("Ανακατασκευασμένη Εικόνα")
+plt.title("Τροποποιημένη Εικόνα")
 plt.axis('off')
 plt.show()

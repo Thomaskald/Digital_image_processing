@@ -24,7 +24,7 @@ plt.imshow(girlface, cmap='gray')
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
-plt.title("Κύρια Αντικείμενα (Otsu)")
+plt.title("Κύρια Αντικείμενα με Otsu")
 plt.imshow(binary, cmap='gray')
 plt.axis('off')
 
