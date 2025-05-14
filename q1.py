@@ -31,12 +31,11 @@ plt.title("Αρχική Εικόνα")
 plt.axis('off')
 plt.show()
 
-# Επεξεργασία κάθε επιπέδου κβάντισης
+# Εμφάνιση κάθε κβαντισμένης εικόνας και υπολογισμός mse για την κάθε μια
 for k in levels:
     quantized = quantize_image_kmeans(original_np, k)
     mse = compute_mse(original_np, quantized)
 
-    # Εμφάνιση κάθε κβαντισμένης εικόνας αμέσως
     plt.figure(figsize=(5, 5))
     plt.imshow(quantized)
     plt.title(f"{k} χρώματα\nMSE = {mse:.2f}")
