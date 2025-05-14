@@ -1,9 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
-from skimage import io, filters, feature, color, measure
-from skimage.filters import sobel
-from skimage import morphology
-from skimage.transform import integral_image
+from skimage import io, filters, feature
 
 # Ανάγνωση εικόνας
 girlface = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/girlface.jpg', as_gray=True)
@@ -19,12 +15,12 @@ binary = girlface > threshold
 plt.figure(figsize=(10, 5))
 
 plt.subplot(1, 2, 1)
-plt.title("Αρχική Εικόνα")
+plt.title("Αρχική εικόνα")
 plt.imshow(girlface, cmap='gray')
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
-plt.title("Κύρια Αντικείμενα με Otsu")
+plt.title("Κύρια αντικείμενα εικόνας")
 plt.imshow(binary, cmap='gray')
 plt.axis('off')
 
@@ -42,12 +38,12 @@ edges_fruits = feature.canny(blurred_image_fruits)
 plt.figure(figsize=(10, 5))
 
 plt.subplot(1, 2, 1)
-plt.title("Αρχική Εικόνα")
+plt.title("Αρχική εικόνα")
 plt.imshow(fruits, cmap='gray')
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
-plt.title("Περιγράμματα με Canny")
+plt.title("Περιγράμματα αντικειμένων εικόνας")
 plt.imshow(edges_fruits, cmap='gray')
 plt.axis('off')
 
@@ -55,19 +51,21 @@ plt.tight_layout()
 plt.show()
 
 # Ερώτημα Γ
+# Εφαρμογή Gaussian blur για να έχουμε πιο καθαρό αποτέλεσμα
+blur = filters.gaussian(leaf, sigma=1.4)
 # Εφαρμογή φίλτρου Laplacian για τον εντοπισμό των λεπτομερειών
-laplacian_image = filters.laplace(leaf)
+laplacian_image = filters.laplace(blur)
 
 # Εμφάνιση αποτελέσματος
 plt.figure(figsize=(10, 5))
 
 plt.subplot(1, 2, 1)
-plt.title("Αρχική Εικόνα")
+plt.title("Αρχική εικόνα")
 plt.imshow(leaf, cmap='gray')
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
-plt.title("Λεπτομέρειες με Laplacian")
+plt.title("Λεπτομέρειες αντικειμένων εικόνας")
 plt.imshow(laplacian_image, cmap='gray')
 plt.axis('off')
 
