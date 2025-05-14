@@ -28,7 +28,7 @@ plt.tight_layout()
 plt.show()
 
 # Ερώτημα Β
-# Εφαρμογή Gaussian φίλτρου για μείωση του θορύβου (προαιρετικό, για καθαρότερη ανίχνευση)
+# Εφαρμογή Gaussian φίλτρου για μείωση του θορύβου
 blurred_image_fruits = filters.gaussian(fruits, sigma=1.4)
 
 # Εφαρμογή φίλτρου Canny για ανίχνευση περιγραμμάτων
@@ -53,6 +53,7 @@ plt.show()
 # Ερώτημα Γ
 # Εφαρμογή Gaussian blur για να έχουμε πιο καθαρό αποτέλεσμα
 blur = filters.gaussian(leaf, sigma=1.4)
+
 # Εφαρμογή φίλτρου Laplacian για τον εντοπισμό των λεπτομερειών
 laplacian_image = filters.laplace(blur)
 
