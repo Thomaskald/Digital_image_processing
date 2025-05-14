@@ -52,10 +52,10 @@ plt.show()
 
 # Ερώτημα Γ
 # Εφαρμογή Gaussian blur για να έχουμε πιο καθαρό αποτέλεσμα
-blur = filters.gaussian(leaf, sigma=1.4)
+blurred_image_leaf = filters.gaussian(leaf, sigma=1.4)
 
 # Εφαρμογή φίλτρου Laplacian για τον εντοπισμό των λεπτομερειών
-laplacian_image = filters.laplace(blur)
+laplacian_image = filters.laplace(blurred_image_leaf)
 
 # Εμφάνιση αποτελέσματος
 plt.figure(figsize=(10, 5))
