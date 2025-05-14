@@ -7,7 +7,7 @@ fruits = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-proj
 leaf = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/leaf.jpg', as_gray=True)
 
 # Ερώτημα Α
-# Εφαρμογή thresholding με Otsu
+# Εφαρμογή Otsu thresholding
 threshold = filters.threshold_otsu(girlface)
 binary = girlface > threshold
 
