@@ -14,12 +14,12 @@ fft_shifted = np.fft.fftshift(fft_img)
 magnitude = np.abs(fft_shifted)
 phase = np.angle(fft_shifted)
 
-# Εμφάνιση εικόνας και φασμάτων
+# Εμφάνιση αρχικής εικόνας, φάσμα πλάτους και φάσμα φάσης
 plt.figure(figsize=(12, 4))
 
 plt.subplot(1, 3, 1)
 plt.imshow(img, cmap='gray')
-plt.title("Εικόνα")
+plt.title("Αρχική εικόνα")
 
 plt.subplot(1, 3, 2)
 plt.imshow(np.log(1 + magnitude), cmap='gray')
@@ -50,7 +50,7 @@ plt.title("Νέο Φάσμα Φάσης")
 plt.tight_layout()
 plt.show()
 
-# Γ: Αντίστροφος μετασχηματισμός
+# Γ: Αντίστροφος μετασχηματισμός και εμφάνιση τροποποιημένης εικόνας
 inv_fft_shifted = np.fft.ifftshift(modified_fft)
 reconstructed = ifft2(inv_fft_shifted)
 reconstructed_real = np.real(reconstructed)
