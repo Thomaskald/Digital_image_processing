@@ -22,7 +22,7 @@ original_img = Image.open(image_path).convert('RGB')
 original_np = np.array(original_img)
 
 # Επίπεδα κβάντισης
-levels = [5, 20, 100, 1000]
+levels = [5, 20, 200, 1000]
 
 # Εμφάνιση αρχικής εικόνας
 plt.figure(figsize=(5, 5))
