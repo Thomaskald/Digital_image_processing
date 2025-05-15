@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import skimage as ski
 from scipy.fft import fft2, ifft2
 
-# Φόρτωμα εικόνας
+# Φόρτωση εικόνας
 img = ski.io.imread("/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/cornfield.jpg", as_gray=True)
 
 # Α: Υπολογισμός μετασχηματισμού Fourier
@@ -15,7 +15,7 @@ magnitude = np.abs(fft_shifted)
 phase = np.angle(fft_shifted)
 
 # Εμφάνιση αρχικής εικόνας, φάσμα πλάτους και φάσμα φάσης
-plt.figure(figsize=(12, 4))
+plt.figure(figsize=(12, 5))
 
 plt.subplot(1, 3, 1)
 plt.imshow(img, cmap='gray')
@@ -37,7 +37,7 @@ flipped_phase = np.flipud(phase)
 modified_fft = magnitude * np.exp(1j * flipped_phase)
 
 # Νέα φάσματα
-plt.figure(figsize=(10, 4))
+plt.figure(figsize=(12, 5))
 
 plt.subplot(1, 2, 1)
 plt.imshow(np.log(1 + np.abs(modified_fft)), cmap='gray')
@@ -56,7 +56,7 @@ reconstructed = ifft2(inv_fft_shifted)
 reconstructed_real = np.real(reconstructed)
 
 # Προβολή τελικής εικόνας
-plt.figure(figsize=(6, 6))
+plt.figure(figsize=(12, 5))
 plt.imshow(reconstructed_real, cmap='gray')
 plt.title("Τροποποιημένη Εικόνα")
 plt.axis('off')

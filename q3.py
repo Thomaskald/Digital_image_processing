@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from skimage import io, filters, feature
 
-# Ανάγνωση εικόνας
+# Φόρτωση των εικόνων
 girlface = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/girlface.jpg', as_gray=True)
 fruits = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/fruits.jpg', as_gray=True)
 leaf = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/leaf.jpg', as_gray=True)
@@ -11,8 +11,8 @@ leaf = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-projec
 threshold = filters.threshold_otsu(girlface)
 binary = girlface > threshold
 
-# Εμφάνιση
-plt.figure(figsize=(10, 5))
+# Εμφάνιση αποτελέσματος
+plt.figure(figsize=(12, 5))
 
 plt.subplot(1, 2, 1)
 plt.title("Αρχική εικόνα")
@@ -58,7 +58,7 @@ blurred_image_leaf = filters.gaussian(leaf, sigma=1.4)
 laplacian_image = filters.laplace(blurred_image_leaf)
 
 # Εμφάνιση αποτελέσματος
-plt.figure(figsize=(10, 5))
+plt.figure(figsize=(12, 5))
 
 plt.subplot(1, 2, 1)
 plt.title("Αρχική εικόνα")

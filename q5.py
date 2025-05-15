@@ -30,8 +30,8 @@ for result in results:
 
 # Εμφάνιση αποτελέσματος
 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(12, 5))
 plt.imshow(frame_rgb)
-plt.title(f'Ανίχνευση {car_count} αυτοκινήτων με YOLOv8')
+plt.title(f'Ανίχνευση {car_count} αυτοκινήτων')
 plt.axis('off')
 plt.show()
