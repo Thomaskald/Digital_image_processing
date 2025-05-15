@@ -1,25 +1,14 @@
+from matplotlib import pyplot as plt
 import numpy as np
-import matplotlib.pyplot as plt
-from skimage import io, color, filters, measure
+import pytesseract
+from PIL import Image
+import cv2
 
-# Φόρτωση εικόνας
-image = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/book-cover.jpeg')
+image = cv2.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/book-cover.jpeg', cv2.IMREAD_GRAYSCALE)
+#text = pytesseract.image_to_string(image)
+text = pytesseract.image_to_string('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/book-cover.jpeg')
+print(text)
 
-#Μετατροπή εικόνας σε εικόνα αποχρώσεων γκρί
-gray_image = color.rgb2gray(image)
-
-#Χρήση Gaussian blur ώστε να είναι καλύτερο το αποτέλεσμα
-blured_image = filters.gaussian(gray_image, sigma=1)
-
-plt.imshow(gray_image, cmap='gray')
-plt.title('Εικόνα αποχρώσεων γκρί')
-plt.axis('off')
-plt.show()
-
-#Αλγόριθμος τμηματοποίησης με χρήση Otsu thresholding
-binary_mask = blured_image > filters.threshold_otsu(blured_image)
-
-plt.imshow(binary_mask, cmap='gray')
-plt.title('Δυαδική μάσκα τμηματοποίησης')
+plt.imshow(image, cmap='gray')
 plt.axis('off')
 plt.show()
