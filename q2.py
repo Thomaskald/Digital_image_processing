@@ -20,6 +20,7 @@ plt.figure(figsize=(12, 5))
 plt.subplot(1, 3, 1)
 plt.imshow(img, cmap='gray')
 plt.title("Αρχική εικόνα")
+plt.axis('off')
 
 plt.subplot(1, 3, 2)
 plt.imshow(np.log(1 + magnitude), cmap='gray')
