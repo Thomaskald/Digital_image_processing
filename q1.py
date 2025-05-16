@@ -17,7 +17,7 @@ def compute_mse(original, quantized):
     return mean_squared_error(original.reshape(-1, 3), quantized.reshape(-1, 3))
 
 # Φόρτωση εικόνας
-image_path = "/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/flowers.jpg"
+image_path = "flowers.jpg"
 original_img = Image.open(image_path).convert('RGB')
 original_np = np.array(original_img)
 

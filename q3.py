@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 from skimage import io, filters, feature
 
 # Φόρτωση των εικόνων
-girlface = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/girlface.jpg', as_gray=True)
-fruits = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/fruits.jpg', as_gray=True)
-leaf = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/leaf.jpg', as_gray=True)
+girlface = io.imread('girlface.jpg', as_gray=True)
+fruits = io.imread('fruits.jpg', as_gray=True)
+leaf = io.imread('leaf.jpg', as_gray=True)
 
 # Ερώτημα Α
 # Εφαρμογή Otsu thresholding

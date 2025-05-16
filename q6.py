@@ -3,9 +3,9 @@ import pytesseract
 import cv2
 
 # Μετατροπή εικόνας σε εικόνα αποχρώσεων γκρί
-image = cv2.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/book-cover.jpeg', cv2.IMREAD_GRAYSCALE)
+image = cv2.imread('book-cover.jpeg', cv2.IMREAD_GRAYSCALE)
 #text = pytesseract.image_to_string(image)
-#text = pytesseract.image_to_string('')
+#text = pytesseract.image_to_string('book-cover.jpeg')
 #print(text)
 
 # Gaussian blur για καλύτερα αποτελέσματα

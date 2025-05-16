@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 model = YOLO('yolov8n.pt')
 
 # Φόρτωση εικόνας
-image = '/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/parking-lot.jpg'
+image = 'parking-lot.jpg'
 frame = cv2.imread(image)
 
 # Ανίχνευση αντικειμένων

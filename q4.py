@@ -5,10 +5,10 @@ from skimage.metrics import structural_similarity as ssim
 from skimage.morphology import disk
 from skimage.restoration import denoise_nl_means
 
-lennaImage = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/lenna.jpg', as_gray=True)
-image1 = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/lenna-n1.jpg', as_gray=True) / 255.0
-image2 = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/lenna-n2.jpg', as_gray=True)
-image3 = io.imread('/home/thomas/Digital_Image_Processing/DIP-project-1/DIP-project-1/images-project-1/lenna-n3.jpg', as_gray=True)
+lennaImage = io.imread('lenna.jpg', as_gray=True)
+image1 = io.imread('lenna-n1.jpg', as_gray=True) / 255.0
+image2 = io.imread('lenna-n2.jpg', as_gray=True)
+image3 = io.imread('lenna-n3.jpg', as_gray=True)
 
 #Εικόνα 1
 sigma_est = 0.08
