@@ -36,4 +36,3 @@ parking3 = filters.laplace(blurred_image_parking)
 # plt.show()
 # plt.imshow(parking3, cmap='gray')
 # plt.show()
-
