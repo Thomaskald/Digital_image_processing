@@ -1,6 +1,5 @@
-from skimage import io, filters, feature, color
-from skimage.filters import laplace, threshold_otsu
-from skimage.color import rgb2gray
+from skimage import io, filters, feature
+from skimage.filters import threshold_otsu
 import matplotlib.pyplot as plt
 
 # Φόρτωση των εικόνων
