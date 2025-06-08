@@ -1,6 +1,5 @@
 from collections import defaultdict
 import cv2
-import numpy as np
 import math
 import heapq
 
@@ -35,39 +34,26 @@ def shannon_fano(symbols_probs):
     symbols = list(symbols_probs.items())
     return build(symbols)
 
-    # === 3. Κωδικοποίηση εικόνας ===
-
-
+    # Κωδικοποίηση εικόνας
 def encode_image(image, codebook):
     return ''.join(codebook[pixel] for pixel in image.flatten())
 
-    # === 4. Εντροπία ===
-
-
+    # Εντροπία
 def compute_entropy(probabilities):
     return -sum(p * math.log2(p) for p in probabilities.values())
 
-    # === 5. Μέσο μήκος κωδικής λέξης ===
-
-
+# Μέσο μήκος κωδικής λέξης
 def average_code_length(probabilities, codebook):
     return sum(probabilities[sym] * len(codebook[sym]) for sym in codebook)
 
-    # === 6. Μέγεθος & λόγος συμπίεσης ===
-
-
+# Μέγεθος & λόγος συμπίεσης
 def compute_compression(original_image, encoded_str):
     original_bits = original_image.size * 8
     compressed_bits = len(encoded_str)
     ratio = original_bits / compressed_bits
     return original_bits, compressed_bits, ratio
 
-    # === 7. Huffman ===
-
-
-import heapq
-
-
+# Huffman
 def huffman_encoding(probabilities):
     heap = [[w, [sym, '']] for sym, w in probabilities.items()]
     heapq.heapify(heap)
@@ -80,7 +66,7 @@ def huffman_encoding(probabilities):
     return dict(sorted({sym: code for sym, code in heap[0][1:]}.items()))
 
 
-# === 8. Διαδικασία πλήρης ===
+# Διαδικασία πλήρης
 def process_image(path):
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     probs = calculate_frequencies(img)
@@ -123,6 +109,6 @@ def process_image(path):
     }
 
 
-# === 9. Εκτέλεση ===
+# Εκτέλεση
 result_airplane = process_image("airplane.jpg")
 result_bridge = process_image("bridge.jpg")
