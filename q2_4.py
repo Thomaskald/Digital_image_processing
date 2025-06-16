@@ -15,7 +15,7 @@ bishop_paths = glob.glob("bishop_resized/*.jpg")
 knight_paths = glob.glob("knight-resize/*.jpg")
 pawn_paths = glob.glob("pawn_resized/*.jpg")
 
-# Συγχώνευση όλων των διαδρομών
+# Συγχώνευση όλων των path
 all_image_paths = queen_paths + rook_paths + bishop_paths + knight_paths + pawn_paths
 
 # Ανάγνωση εικόνων
