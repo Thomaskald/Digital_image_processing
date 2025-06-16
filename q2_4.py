@@ -1,95 +1,84 @@
-from scipy.cluster.vq import vq
+import cv2
 import numpy as np
 import glob
 from skimage.feature import SIFT
-import cv2
-from PIL.Image import Image
+from scipy.cluster.vq import vq
+import os
 from matplotlib import pyplot as plt
+from matplotlib import image as mpimg
+from scipy.spatial.distance import cdist
 
-queen_path = glob.glob("Queen-Resized/*.jpg", recursive=True)
-bishop_path = glob.glob("bishop_resized/*.jpg", recursive=True)
-knight_path = glob.glob("knight-resize/*.jpg", recursive=True)
-pawn_path = glob.glob("pawn_resized/*.jpg", recursive=True)
-rook_path = glob.glob("Rook-resize/*.jpg", recursive=True)
+# Φόρτωση path εικόνων
+queen_paths = glob.glob("Queen-Resized/*.jpg")
+rook_paths = glob.glob("Rook-resize/*.jpg")
+bishop_paths = glob.glob("bishop_resized/*.jpg")
+knight_paths = glob.glob("knight-resize/*.jpg")
+pawn_paths = glob.glob("pawn_resized/*.jpg")
 
-image_paths = bishop_path + knight_path + pawn_path + queen_path + rook_path
+# Συγχώνευση όλων των διαδρομών
+all_image_paths = queen_paths + rook_paths + bishop_paths + knight_paths + pawn_paths
 
-images = [cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) for image_path in image_paths]
+# Ανάγνωση εικόνων
+images = [cv2.imread(path, cv2.IMREAD_GRAYSCALE) for path in all_image_paths]
+
+# Α
 
 sift = SIFT()
-descriptors = []
 
-images_valid = []
-descriptors = []
+descriptors_list = []
+valid_images = []
 
-for img in images:
+# Εξαγωγή SIFT χαρακτηριστικών από κάθε εικόνα
+for image in images:
     try:
-        sift.detect_and_extract(img)
+        sift.detect_and_extract(image)
         if sift.descriptors is not None and len(sift.descriptors) > 0:
-            descriptors.append(sift.descriptors)
-            images_valid.append(img)  # μόνο τις χρήσιμες
+            descriptors_list.append(sift.descriptors)
+            valid_images.append(image)
     except RuntimeError:
-        print("SIFT failed on one image. Skipping.")
+        continue  # Παράλειψη εικόνων που αποτυγχάνουν
 
-images_gray = [cv2.imread(p, cv2.IMREAD_GRAYSCALE) for p in image_paths]
-
-image_paths_valid = []
-for img, path in zip(images_gray, image_paths):
-    for valid_img in images_valid:
-        if np.array_equal(img, valid_img):
-            image_paths_valid.append(path)
+images_gray = [cv2.imread(p, cv2.IMREAD_GRAYSCALE) for p in all_image_paths]
+valid_paths = []
+for img, path in zip(images_gray, all_image_paths):
+    for v_img in valid_images:
+        if np.array_equal(img, v_img):
+            valid_paths.append(path)
             break
 
-all_descriptors = np.vstack([desc for desc in descriptors if desc is not None]).astype(float)
+# Συγκέντρωση όλων των περιγραφών SIFT
+all_descriptors = np.vstack(descriptors_list).astype(np.float32)
 
-# -------------------- 4. Εκπαίδευση KMeans (λεξικό) --------------------
-k = 200  # Αριθμός visual words
+# K-means για δημιουργία οπτικού λεξικού
+k = 200
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
-attempts = 10
-flags = cv2.KMEANS_RANDOM_CENTERS
+_, _, visual_words = cv2.kmeans(all_descriptors, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
 
-all_descriptors = all_descriptors.astype(np.float32)
+image_word_indices = []
+for desc in descriptors_list:
+    words, _ = vq(desc, visual_words)
+    image_word_indices.append(words)
 
-compactness, labels, centers = cv2.kmeans(all_descriptors, k, None, criteria, attempts, flags)
-codebook = centers
-
-# -------------------- 5. Αντιστοίχιση descriptors σε visual words --------------------
-visual_words = []
-for desc in descriptors:
-    if desc is not None:
-        words, _ = vq(desc, codebook)
-    else:
-        words = np.array([])
-    visual_words.append(words)
-
-# -------------------- 6. Δημιουργία BoVW vector (ιστόγραμμα) --------------------
+# Δημιουργεία BoVW
 bovw_vectors = []
-for words in visual_words:
-    hist = np.zeros(k)
-    for w in words:
-        hist[w] += 1
-    bovw_vectors.append(hist)
+for word_indices in image_word_indices:
+    histogram = np.zeros(k)
+    for word in word_indices:
+        histogram[word] += 1
+    bovw_vectors.append(histogram)
 
 bovw_vectors = np.stack(bovw_vectors)
 
-# -------------------- 7. (Προαιρετικά) TF-IDF μετασχηματισμός --------------------
+# TF-IDF για ενίσχυση πληροφορίας
 N = len(bovw_vectors)
 df = np.sum(bovw_vectors > 0, axis=0)
-idf = np.log(N / (df + 1e-6))  # μικρή τιμή για αποφυγή log(0)
-tf_idf = bovw_vectors * idf
+idf = np.log(N / (df + 1e-6))
+tfidf_vectors = bovw_vectors * idf
 
-# -------------------- 8. Προβολή αποτελεσμάτων --------------------
+# Β
 
-
-
-from matplotlib import image as mpimg
-from sklearn.metrics import pairwise_distances
-# B
-
-from scipy.spatial.distance import cdist
-import os
-
-query_filenames = [
+# Ορισμός εικόνων αναζήτησης
+query_images = [
     "Queen-Resized/00000000_resized.jpg",
     "Queen-Resized/00000001_resized.jpg",
     "Rook-resize/00000001_resized.jpg",
@@ -102,59 +91,57 @@ query_filenames = [
     "pawn_resized/00000002_resized.jpg"
 ]
 
+image_index_map = {os.path.normpath(p): i for i, p in enumerate(valid_paths)}
 
-# Αντιστοίχιση path -> index
-image_path_map = {os.path.normpath(p): i for i, p in enumerate(image_paths_valid)}
-
-# Λίστα με index των query εικόνων
 query_indices = []
-for q in query_filenames:
-    q_norm = os.path.normpath(q)
-    if q_norm in image_path_map:
-        query_indices.append(image_path_map[q_norm])
+for query_path in query_images:
+    norm_path = os.path.normpath(query_path)
+    if norm_path in image_index_map:
+        query_indices.append(image_index_map[norm_path])
     else:
-        print(f"⚠️ Δεν βρέθηκε: {q}")
+        print(f"Η εικόνα δεν βρέθηκε: {query_path}")
 
+# Υπολογισμός ευκλείδειων αποστάσεων
+features = tfidf_vectors
+distance_matrix = cdist(features, features, metric='euclidean')
 
-features = tf_idf  # μπορείς και bovw_vectors αν δεν θέλεις TF-IDF
-dist_matrix = cdist(features, features, metric='euclidean')
+# Γ
 
 accuracies = []
 
-for query_idx in query_indices:
-    dists = dist_matrix[query_idx]
-    dists[query_idx] = np.inf
+for idx in query_indices:
+    distances = distance_matrix[idx]
+    distances[idx] = np.inf
 
-    top_indices = np.argsort(dists)[:10]
-    query_path = image_paths_valid[query_idx]
+    top10_indices = np.argsort(distances)[:10]
+
+    query_path = valid_paths[idx]
     query_label = os.path.normpath(query_path).split(os.sep)[0].lower()
-    retrieved_paths = [image_paths_valid[i] for i in top_indices]
-    retrieved_labels = [os.path.normpath(p).split(os.sep)[0].lower() for p in retrieved_paths]
 
-    correct = sum(1 for lbl in retrieved_labels if lbl == query_label)
-    accuracy = correct / 10.0
+    result_paths = [valid_paths[i] for i in top10_indices]
+    result_labels = [os.path.normpath(p).split(os.sep)[0].lower() for p in result_paths]
+
+    correct_matches = sum(1 for lbl in result_labels if lbl == query_label)
+    accuracy = correct_matches / 10.0
     accuracies.append(accuracy)
 
-    # Εμφάνιση με εικόνες
-    fig, axs = plt.subplots(1, 11, figsize=(20, 4))
-    fig.suptitle(f"Query: {query_label} | Accuracy: {accuracy:.2f}", fontsize=14)
+    # Δ
 
-    # Query image
+    fig, axs = plt.subplots(1, 11, figsize=(20, 4))
+    fig.suptitle(f"Query: {query_label} | Ακρίβεια: {accuracy:.2f}", fontsize=14)
+
     axs[0].imshow(mpimg.imread(query_path), cmap='gray')
     axs[0].set_title("Query")
     axs[0].axis("off")
 
-    # Top-10
-    for j, (img_path, lbl) in enumerate(zip(retrieved_paths, retrieved_labels), start=1):
+    for j, (img_path, label) in enumerate(zip(result_paths, result_labels), start=1):
         axs[j].imshow(mpimg.imread(img_path), cmap='gray')
-        axs[j].set_title(lbl[:6])  # π.χ. "queen", "pawn", ...
+        axs[j].set_title(label[:6])
         axs[j].axis("off")
 
     plt.tight_layout()
     plt.show()
 
-
-# Μέση ακρίβεια
+# Υπολογισμός μέσης ακρίβειας ανάκτησης
 mean_accuracy = np.mean(accuracies)
-print(f"\n📊 Μέση Ακρίβεια Ανάκτησης (Top-10): {mean_accuracy:.2f}")
-
+print(f"\nΜέση Ακρίβεια Ανάκτησης : {mean_accuracy:.2f}")
