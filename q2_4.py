@@ -59,7 +59,7 @@ for desc in descriptors_list:
     words, _ = vq(desc, visual_words)
     image_word_indices.append(words)
 
-# Δημιουργεία BoVW
+# Δημιουργία BoVW
 bovw_vectors = []
 for word_indices in image_word_indices:
     histogram = np.zeros(k)
