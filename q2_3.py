@@ -1,4 +1,3 @@
-from matplotlib.pyplot import hist
 import glob
 import numpy as np
 import skimage as ski
@@ -17,7 +16,6 @@ import os
 check_paths = glob.glob("chcek/**/*.jp*g", recursive=True)
 test_paths = glob.glob("test/**/*.jp*g", recursive=True)
 
-# Combine the lists
 image_paths = check_paths + test_paths
 
 for path in image_paths:
@@ -36,7 +34,7 @@ for path in image_paths:
     lbp_hist, _ = np.histogram(image_lbp.ravel(), bins=np.arange(0, image_lbp.max() + 2), density=True)
 
 
-    lbp_vector = lbp_hist.reshape(-1)  # (ή: lbp_vector = lbp_hist if already 1D)
+    lbp_vector = lbp_hist.reshape(-1)
 
     fd, hog_image = ski.feature.hog(
         image,
@@ -57,13 +55,6 @@ for path in image_paths:
     print(f"GLCM shape: {glcm[:, :, 0, 0].shape}, vector: {glcm_vector.shape}")
     print(f"LBP hist shape: {lbp_hist.shape}, vector: {lbp_vector.shape}")
     print(f"HOG shape: {fd.shape}, vector: {hog_vector.shape}")
-
-    # print(f"Shape of descriptors: {fd.shape}")
-    # print(f"Blocks: {fd.shape[0]}x{fd.shape[1]} = {fd.shape[0] * fd.shape[1]}")
-    # for i in range(fd.shape[0]):
-    #     for j in range(fd.shape[1]):
-    #         print(f"Block ({i}, {j}):")
-    #        print(fd[i, j])
 
     plt.subplot(2, 3, 1)
     plt.imshow(image, cmap="gray")
@@ -112,7 +103,7 @@ for label, path in prototype_images.items():
     glcm = graycomatrix(image, distances=[1], angles=[ 7 *np.pi /4], levels=256, symmetric=True, normed=True)
     glcm_vec = glcm[:, :, 0, 0].reshape(-1)
 
-    lbp = skimage.feature.local_binary_pattern(image, P=500, R=1, method='uniform')
+    lbp = skimage.feature.local_binary_pattern(image, P=8, R=1, method='uniform')
     lbp_hist, _ = np.histogram(lbp.ravel(), bins=np.arange(0, int(lbp.max() + 2)), density=True)
     lbp_vec = lbp_hist.reshape(-1)
 
@@ -144,7 +135,7 @@ for path in test_paths:
     glcm = graycomatrix(image, distances=[1], angles=[ 7 *np.pi /4], levels=256, symmetric=True, normed=True)
     glcm_vec = glcm[:, :, 0, 0].reshape(-1)
 
-    lbp = skimage.feature.local_binary_pattern(image, P=500, R=1, method='uniform')
+    lbp = skimage.feature.local_binary_pattern(image, P=8, R=1, method='uniform')
     lbp_hist, _ = np.histogram(lbp.ravel(), bins=np.arange(0, int(lbp.max() + 2)), density=True)
     lbp_vec = lbp_hist.reshape(-1)
 
@@ -197,7 +188,7 @@ for path in test_paths:
     glcm_vec = StandardScaler().fit_transform(glcm_vec.reshape(-1, 1)).flatten()
 
     # LBP
-    lbp = skimage.feature.local_binary_pattern(image, P=500, R=1, method='uniform')
+    lbp = skimage.feature.local_binary_pattern(image, P=8, R=1, method='uniform')
     lbp_hist, _ = np.histogram(lbp.ravel(), bins=np.arange(0, int(lbp.max() + 2)), density=True)
     lbp_vec = lbp_hist.reshape(-1)
     lbp_vec = StandardScaler().fit_transform(lbp_vec.reshape(-1, 1)).flatten()
@@ -224,7 +215,6 @@ for path in test_paths:
     predicted_lbp = min(similarities_lbp, key=similarities_lbp.get)
     predicted_hog = min(similarities_hog, key=similarities_hog.get)
 
-    # ΠΡΑΓΜΑΤΙΚΗ ΕΤΙΚΕΤΑ ΑΠΟ ΤΟ PATH
     true_label = os.path.basename(os.path.dirname(path)).lower()
     true_labels.append(true_label)
 
@@ -239,7 +229,6 @@ for path in test_paths:
 
     plt.show()
 
-# ΥΠΟΛΟΓΙΣΜΟΣ ACCURACY ΜΕΤΑ ΤΟ LOOP
 acc_glcm = accuracy_score(true_labels, predicted_labels_glcm)
 acc_lbp = accuracy_score(true_labels, predicted_labels_lbp)
 acc_hog = accuracy_score(true_labels, predicted_labels_hog)
