@@ -13,7 +13,7 @@ import os
 
 
 
-
+# Α-Β
 check_paths = glob.glob("chcek/**/*.jp*g", recursive=True)
 test_paths = glob.glob("test/**/*.jp*g", recursive=True)
 
@@ -56,7 +56,7 @@ for path in image_paths:
     print(f"LBP hist shape: {lbp_hist.shape}, vector: {lbp_vector.shape}")
     print(f"HOG shape: {fd.shape}, vector: {hog_vector.shape}")
 
-# Δ
+# Γ-Δ
 prototype_images = {
     "cow": "chcek/cow/cow_1001.jpg",
     "horse": "chcek/horse/horse_1001.jpeg",
