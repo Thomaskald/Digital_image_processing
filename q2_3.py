@@ -97,8 +97,6 @@ for label, path in prototype_images.items():
     }
 
 for path in test_paths:
-    if any(proto in path for proto in prototype_images.values()):
-        continue  # skip prototypes
 
     FIXED_SIZE = (128, 128)
     image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
@@ -192,7 +190,6 @@ for path in test_paths:
     hog_vec = hog_fd.reshape(-1)
     hog_vec = StandardScaler().fit_transform(hog_vec.reshape(-1, 1)).flatten()
 
-    # Υπολογισμός αποστάσεων για κάθε χαρακτηριστικό
     similarities_glcm = {}
     similarities_lbp = {}
     similarities_hog = {}
