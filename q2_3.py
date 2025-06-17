@@ -28,7 +28,6 @@ for path in image_paths:
         image, distances=[distance], angles=[angle], levels=256, symmetric=True, normed=True
     )
     glcm_vector = glcm[:, :, 0, 0].reshape(-1)
-    fig, ax = plt.subplots(2, 3, figsize=(12, 6))
 
     image_lbp = ski.feature.local_binary_pattern(image, P=16, R=1, method="uniform")
     image_lbp = image_lbp.astype(np.uint8)
@@ -57,35 +56,7 @@ for path in image_paths:
     print(f"LBP hist shape: {lbp_hist.shape}, vector: {lbp_vector.shape}")
     print(f"HOG shape: {fd.shape}, vector: {hog_vector.shape}")
 
-    plt.subplot(2, 3, 1)
-    plt.imshow(image, cmap="gray")
-
-    plt.subplot(2, 3, 2)
-    plt.imshow(image_lbp, cmap="gray")
-
-    plt.subplot(2, 3, 3)
-    plt.imshow(glcm[:, :, 0, 0], cmap="gray")
-
-    plt.subplot(2, 3, 4)
-    plt.hist(
-        image_lbp.ravel(),
-        bins=np.arange(0, image_lbp.max() + 2) - 0.5,
-        density=True
-    )
-    plt.title("LBP Histogram")
-    plt.xlabel("LBP value")
-    plt.ylabel("Frequency")
-
-    plt.subplot(2, 3, 5)
-    plt.imshow(hog_image_rescaled, cmap="gray")
-    plt.title("HOG")
-
-    plt.show()
-
-
 # Δ
-
-
 prototype_images = {
     "cow": "chcek/cow/cow_1001.jpg",
     "horse": "chcek/horse/horse_1001.jpeg",
@@ -100,7 +71,7 @@ for label, path in prototype_images.items():
     image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     image = cv2.resize(image, FIXED_SIZE)
 
-    # Υπολογισμός χαρακτηριστικών όπως πριν:
+    # Υπολογισμός χαρακτηριστικών
     glcm = graycomatrix(image, distances=[1], angles=[ 7 *np.pi /4], levels=256, symmetric=True, normed=True)
     glcm_vec = glcm[:, :, 0, 0].reshape(-1)
 
@@ -169,12 +140,11 @@ for path in test_paths:
     fig = plt.figure(figsize=(8, 4))
     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
 
-    # Υποπλοκή για τις μπάρες (αποστάσεις)
     ax0 = plt.subplot(gs[0])
     labels = [lbl for lbl, _ in sorted_labels]
     dists = [score for _, score in sorted_labels]
 
-    # Δημιουργία bar plot με ομοιότητες. Όσο μικρότερη η τιμή, τόσο περισσότερο μοιάζει με το συγκεκριμένο ζόω
+    # Δημιουργία bar plot με ομοιότητες. Όσο μικρότερη η τιμή, τόσο περισσότερο μοιάζει με το συγκεκριμένο ζώο
     bars = ax0.barh(labels[::-1], dists[::-1], color='skyblue')
     ax0.set_title(f"Πρόβλεψη: {predicted_label}")
     ax0.set_xlabel("Ομοιότητα")
@@ -182,11 +152,7 @@ for path in test_paths:
     # Προσθήκη τιμών μέσα στις μπάρες
     for bar, dist in zip(bars, dists[::-1]):
         width = bar.get_width()
-        ax0.text(width - 0.02,  # λίγο πριν το τέλος της μπάρας
-                 bar.get_y() + bar.get_height() / 2,  # στο κέντρο ύψους
-                 f"{dist:.3f}",  # 3 δεκαδικά
-                 ha='right', va='center',  # στοίχιση δεξιά και κεντραρισμένη κάθετα
-                 color='black', fontsize=9)
+        ax0.text(width - 0.02, bar.get_y() + bar.get_height() / 2,f"{dist:.3f}", ha='right', va='center', color='black', fontsize=9)
 
     ax1 = plt.subplot(gs[1])
     ax1.imshow(image, cmap='gray')
@@ -195,18 +161,13 @@ for path in test_paths:
     plt.tight_layout()
     plt.show()
 
-
 # E
-
-
 true_labels = []
 predicted_labels_glcm = []
 predicted_labels_lbp = []
 predicted_labels_hog = []
 
 for path in test_paths:
-    if any(proto in path for proto in prototype_images.values()):
-        continue  # skip prototypes
 
     FIXED_SIZE = (128, 128)
     image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
@@ -255,7 +216,7 @@ for path in test_paths:
     print("Predicted GLCM label:", predicted_glcm)
     print("Predicted LBP label:", predicted_lbp)
     print("Predicted HOG label:", predicted_hog)
-    plt.imshow(image, cmap='gray')
+    #plt.imshow(image, cmap='gray')
 
     #plt.show()
 
