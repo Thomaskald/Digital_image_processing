@@ -174,10 +174,10 @@ for path in test_paths:
     labels = [lbl for lbl, _ in sorted_labels]
     dists = [score for _, score in sorted_labels]
 
-    # Δημιουργία οριζόντιου bar plot
+    # Δημιουργία bar plot με ομοιότητες. Όσο μικρότερη η τιμή, τόσο περισσότερο μοιάζει με το συγκεκριμένο ζόω
     bars = ax0.barh(labels[::-1], dists[::-1], color='skyblue')
-    ax0.set_title(f"Prediction: {predicted_label}")
-    ax0.set_xlabel("Similarity")
+    ax0.set_title(f"Πρόβλεψη: {predicted_label}")
+    ax0.set_xlabel("Ομοιότητα")
 
     # Προσθήκη τιμών μέσα στις μπάρες
     for bar, dist in zip(bars, dists[::-1]):
