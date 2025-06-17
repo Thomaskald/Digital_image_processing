@@ -2,6 +2,7 @@ import glob
 import numpy as np
 import skimage as ski
 from matplotlib import pyplot as plt
+import matplotlib.gridspec as gridspec
 import cv2
 from skimage.feature import graycomatrix
 from sklearn.metrics import accuracy_score
@@ -149,7 +150,6 @@ for path in test_paths:
     glcm_vec = scaler.fit_transform(glcm_vec.reshape(-1, 1)).flatten()
     lbp_vec = scaler.fit_transform(lbp_vec.reshape(-1, 1)).flatten()
     hog_vec = scaler.fit_transform(hog_vec.reshape(-1, 1)).flatten()
-    plt.imshow(image, cmap='gray')
 
     similarities = {}
     for label, data in prototypes.items():
@@ -163,6 +163,24 @@ for path in test_paths:
 
     print(f"Predicted label: {predicted_label}")
 
+    sorted_labels = sorted(similarities.items(), key=lambda x: x[1])
+    predicted_label = sorted_labels[0][0]
+
+    fig = plt.figure(figsize=(8, 4))
+    gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
+
+    ax0 = plt.subplot(gs[0])
+    labels = [lbl for lbl, _ in sorted_labels]
+    dists = [score for _, score in sorted_labels]
+    ax0.barh(labels[::-1], dists[::-1], color='skyblue')
+    ax0.set_title(f"Prediction: {predicted_label}")
+    ax0.set_xlabel("Distance (lower = more similar)")
+
+    ax1 = plt.subplot(gs[1])
+    ax1.imshow(image, cmap='gray')
+    ax1.axis('off')
+
+    plt.tight_layout()
     plt.show()
 
 
@@ -227,7 +245,7 @@ for path in test_paths:
     print("Predicted HOG label:", predicted_hog)
     plt.imshow(image, cmap='gray')
 
-    plt.show()
+    #plt.show()
 
 acc_glcm = accuracy_score(true_labels, predicted_labels_glcm)
 acc_lbp = accuracy_score(true_labels, predicted_labels_lbp)
