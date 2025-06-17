@@ -188,7 +188,6 @@ for path in test_paths:
                  ha='right', va='center',  # στοίχιση δεξιά και κεντραρισμένη κάθετα
                  color='black', fontsize=9)
 
-    # Υποπλοκή για την εικόνα
     ax1 = plt.subplot(gs[1])
     ax1.imshow(image, cmap='gray')
     ax1.axis('off')
@@ -264,7 +263,7 @@ acc_glcm = accuracy_score(true_labels, predicted_labels_glcm)
 acc_lbp = accuracy_score(true_labels, predicted_labels_lbp)
 acc_hog = accuracy_score(true_labels, predicted_labels_hog)
 
-print("\n--- Accuracy Results ---")
+print("\nAccuracy Results")
 print(f"GLCM Accuracy: {acc_glcm:.2%}")
 print(f"LBP  Accuracy: {acc_lbp:.2%}")
 print(f"HOG  Accuracy: {acc_hog:.2%}")
