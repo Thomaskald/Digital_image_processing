@@ -169,13 +169,26 @@ for path in test_paths:
     fig = plt.figure(figsize=(8, 4))
     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
 
+    # Υποπλοκή για τις μπάρες (αποστάσεις)
     ax0 = plt.subplot(gs[0])
     labels = [lbl for lbl, _ in sorted_labels]
     dists = [score for _, score in sorted_labels]
-    ax0.barh(labels[::-1], dists[::-1], color='skyblue')
-    ax0.set_title(f"Prediction: {predicted_label}")
-    ax0.set_xlabel("Distance (lower = more similar)")
 
+    # Δημιουργία οριζόντιου bar plot
+    bars = ax0.barh(labels[::-1], dists[::-1], color='skyblue')
+    ax0.set_title(f"Prediction: {predicted_label}")
+    ax0.set_xlabel("Similarity")
+
+    # Προσθήκη τιμών μέσα στις μπάρες
+    for bar, dist in zip(bars, dists[::-1]):
+        width = bar.get_width()
+        ax0.text(width - 0.02,  # λίγο πριν το τέλος της μπάρας
+                 bar.get_y() + bar.get_height() / 2,  # στο κέντρο ύψους
+                 f"{dist:.3f}",  # 3 δεκαδικά
+                 ha='right', va='center',  # στοίχιση δεξιά και κεντραρισμένη κάθετα
+                 color='black', fontsize=9)
+
+    # Υποπλοκή για την εικόνα
     ax1 = plt.subplot(gs[1])
     ax1.imshow(image, cmap='gray')
     ax1.axis('off')
