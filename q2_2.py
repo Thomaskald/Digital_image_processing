@@ -66,7 +66,6 @@ def huffman_encoding(probabilities):
     return dict(sorted({sym: code for sym, code in heap[0][1:]}.items()))
 
 
-# Διαδικασία πλήρης
 def process_image(path):
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     probs = calculate_frequencies(img)
